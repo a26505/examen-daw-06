@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-temp
+  template:
+    metadata:
+      labels:
+        app: backend-temp
+    spec:
+      containers:
+      - name: backend
+        image: danic19/backend-examen:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_ENV
+          value: "development"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temperaturas-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-temp
+  ports:
+    - port: 5000
+      targetPort: 5000
